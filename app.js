@@ -42,6 +42,7 @@ function setupLiveReader(resultElement) {
         console.log('barcode detected, stream will stop')
         resultElement.value = result[0].Value
         console.log(result);
+        alert(result);
 
         BarcodeScanner.StopStreamDecode()
         stopBarcodeReader()
