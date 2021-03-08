@@ -39,12 +39,14 @@ function setupLiveReader(resultElement) {
 
       BarcodeScanner.init()
       BarcodeScanner.streamCallback = function(result) {
-        console.log('barcode detected, stream will stop')
-        window.location.href = `${document.referrer}productbuys/shoppinglist2?barcode=${result[0].Value}`;
+        console.log('barcode detected, stream will stop');
+        const { referrer } = document;
+        const partToAdd = referrer.includes("49.12.46.165") ? `${referrer}noxo-app/public/` : referrer;
+        window.location.href = `${partToAdd}productbuys/shoppinglist2?barcode=${result[0].Value}`;
         //resultElement.value = result[0].Value;
 
-        BarcodeScanner.StopStreamDecode()
-        stopBarcodeReader()
+        BarcodeScanner.StopStreamDecode();
+        stopBarcodeReader();
       }
 
       video.setAttribute('autoplay', '')
