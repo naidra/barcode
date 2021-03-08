@@ -40,7 +40,7 @@ function setupLiveReader(resultElement) {
       BarcodeScanner.init()
       BarcodeScanner.streamCallback = function(result) {
         console.log('barcode detected, stream will stop')
-        window.location.href = `${document.referrer}/productbuys/shoppinglist2?barcode=${result[0].Value}`;
+        window.location.href = `${document.referrer}productbuys/shoppinglist2?barcode=${result[0].Value}`;
         //resultElement.value = result[0].Value;
 
         BarcodeScanner.StopStreamDecode()
