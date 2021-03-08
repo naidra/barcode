@@ -31,66 +31,70 @@ function setupLiveReader(resultElement) {
     }
   }
 
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(function(stream) {
-      window.currentStream = stream.getTracks()[0]
-      video.width = 320
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices
+      .getUserMedia(constraints)
+      .then(function(stream) {
+        window.currentStream = stream.getTracks()[0]
+        video.width = 320
 
-      BarcodeScanner.init()
-      BarcodeScanner.streamCallback = function(result) {
-        console.log('barcode detected, stream will stop');
-        let referrer = document.referrer;
-        referrer = referrer.includes('noxo-app/public/productbuys/shoppinglist2') ? referrer.split('noxo-app/public/productbuys/shoppinglist2')[0] : referrer;
-        let partToAdd = referrer.includes("49.12.46.165") ? `${referrer}noxo-app/public/` : referrer;
-        if(!partToAdd.includes('/noxo-app') && partToAdd.includes('noxo-app')) partToAdd = partToAdd.replace("noxo-app", "/noxo-app");
-        window.location.href = `${partToAdd}productbuys/shoppinglist2?barcode=${result[0].Value}`;
-        //resultElement.value = result[0].Value;
+        BarcodeScanner.init()
+        BarcodeScanner.streamCallback = function(result) {
+          console.log('barcode detected, stream will stop');
+          let referrer = document.referrer;
+          referrer = referrer.includes('noxo-app/public/productbuys/shoppinglist2') ? referrer.split('noxo-app/public/productbuys/shoppinglist2')[0] : referrer;
+          let partToAdd = referrer.includes("49.12.46.165") ? `${referrer}noxo-app/public/` : referrer;
+          if(!partToAdd.includes('/noxo-app') && partToAdd.includes('noxo-app')) partToAdd = partToAdd.replace("noxo-app", "/noxo-app");
+          window.location.href = `${partToAdd}productbuys/shoppinglist2?barcode=${result[0].Value}`;
+          //resultElement.value = result[0].Value;
 
-        BarcodeScanner.StopStreamDecode();
-        stopBarcodeReader();
-      }
-
-      video.setAttribute('autoplay', '')
-      video.setAttribute('playsinline', '')
-      video.setAttribute('style', 'width: 100%')
-      video.srcObject = stream
-      container.appendChild(video)
-      video.onloadedmetadata = function(e) {
-        var canvasSetting = {
-          x: 50,
-          y: 20,
-          width: 200,
-          height: 30
+          BarcodeScanner.StopStreamDecode();
+          stopBarcodeReader();
         }
-        var rect = video.getBoundingClientRect()
-        canvas.style.height = rect.height + 'px'
-        canvas.style.width = rect.width + 'px'
-        canvas.style.top = rect.top + 'px'
-        canvas.style.left = rect.left + 'px'
-        const overlayColor = 'rgba(71, 76, 85, .9)'
-        context.fillStyle = overlayColor
-        context.fillRect(0, 0, rect.width, rect.height)
-        context.clearRect(
-          canvasSetting.x,
-          canvasSetting.y,
-          canvasSetting.width,
-          canvasSetting.height
-        )
-        context.strokeStyle = '#ff671f'
-        context.strokeRect(
-          canvasSetting.x,
-          canvasSetting.y,
-          canvasSetting.width,
-          canvasSetting.height
-        )
-        video.play()
-        BarcodeScanner.DecodeStream(video)
-      }
-    })
-    .catch(function(err) {
-      console.log(err)
-    })
+
+        video.setAttribute('autoplay', '')
+        video.setAttribute('playsinline', '')
+        video.setAttribute('style', 'width: 100%')
+        video.srcObject = stream
+        container.appendChild(video)
+        video.onloadedmetadata = function(e) {
+          var canvasSetting = {
+            x: 50,
+            y: 20,
+            width: 200,
+            height: 30
+          }
+          var rect = video.getBoundingClientRect()
+          canvas.style.height = rect.height + 'px'
+          canvas.style.width = rect.width + 'px'
+          canvas.style.top = rect.top + 'px'
+          canvas.style.left = rect.left + 'px'
+          const overlayColor = 'rgba(71, 76, 85, .9)'
+          context.fillStyle = overlayColor
+          context.fillRect(0, 0, rect.width, rect.height)
+          context.clearRect(
+            canvasSetting.x,
+            canvasSetting.y,
+            canvasSetting.width,
+            canvasSetting.height
+          )
+          context.strokeStyle = '#ff671f'
+          context.strokeRect(
+            canvasSetting.x,
+            canvasSetting.y,
+            canvasSetting.width,
+            canvasSetting.height
+          )
+          video.play()
+          BarcodeScanner.DecodeStream(video)
+        }
+      })
+      .catch(function(err) {
+        console.log(err)
+      })
+  } else {
+    alert('`navigator.mediaDevices` not supported in this browser.');
+  }
 }
 
 function stopBarcodeReader() {
