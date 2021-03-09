@@ -149,6 +149,10 @@ BarcodeScanner = {
 	
 	// The callback function for stream decoding used internally by BarcodeScanner.
 	BarcodeScannerStreamCallback : function(e) {
+		if(e.data.success) {
+			alert(e.data.result);
+			return;
+		}
 		if(e.data.success == "localization") {
 			if(BarcodeScanner.Config.LocalizationFeedback) {
 				BarcodeScanner.LocalizationCallback(e.data.result);
