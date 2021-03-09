@@ -164,7 +164,7 @@ BarcodeScanner = {
 				}
 			}
 			if(filteredData.length > 0) {
-				alert(JSON.stringify([filteredData, e.data.result]));
+				alert(JSON.stringify([filteredData, e.data]));
 				return;
 				BarcodeScanner.streamCallback(filteredData);
 			}
