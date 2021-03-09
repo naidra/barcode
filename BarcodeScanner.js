@@ -151,8 +151,9 @@ BarcodeScanner = {
 	BarcodeScannerStreamCallback : function(e) {
 		if(e.data.success == "localization") {
 			if(BarcodeScanner.Config.LocalizationFeedback) {
+				alert(JSON.stringify(e.data));
+				return;
 				BarcodeScanner.LocalizationCallback(e.data.result);
-				alert(e.data.result);
 			}
 			return;
 		}
