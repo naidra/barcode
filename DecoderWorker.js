@@ -456,6 +456,7 @@ function ImgProcessing() {
 	for(var i = 0; i < rects.length; i++) {
 		feedBack.push({x: rects[i][0][0], y : rects[i][1][0], width : rects[i][0][1] - rects[i][0][0], height: rects[i][1][1]-rects[i][1][0]});
 	}
+	alert(JSON.stringify(feedBack));
 	if(feedBack.length > 0) postMessage({result: feedBack, success: "localization"});
 	allTables = [];
 	for(var i = 0; i < rects.length; i++) {
