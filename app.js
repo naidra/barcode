@@ -47,7 +47,13 @@ function setupLiveReader(resultElement) {
           const redirectTo = url.searchParams.get('redirectTo');
           // return console.log('redirecting to:', redirectTo);
           if (redirectTo) {
-            location.href = `${decodeURIComponent(redirectTo)}?code=${result[0].Value}`;
+            const redirectToDecoded = new URL(decodeURIComponent(redirectTo));
+            if (redirectToDecoded.searchParams.has('code')) {
+              redirectToDecoded.searchParams.set('code', result[0].Value);
+            } else {
+              redirectToDecoded.searchParams.append('code', result[0].Value);
+            }
+            location.href = redirectToDecoded.href;
           } else {
             const partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/noxo-app/public` : referrer;
             location.href = `${partToAdd}/productbuys/shoppinglist2?barcode=${result[0].Value}`;
