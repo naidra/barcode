@@ -42,8 +42,9 @@ function setupLiveReader(resultElement) {
         BarcodeScanner.streamCallback = function(result) {
           console.log('barcode detected, stream will stop');
           let referrer = new URL(document.referrer).origin;
-          let partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/noxo-app/public` : referrer;
-          window.location.href = `${partToAdd}/productbuys/shoppinglist2?barcode=${result[0].Value}`;
+          const [dashPatId, orderId] = result[0].Value.split(' ');
+          let partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/dash/public` : referrer;
+          window.location.href = `${partToAdd}/redirectToTheOrder/${dashPatId}/${orderId}`;
           //resultElement.value = result[0].Value;
 
           BarcodeScanner.StopStreamDecode();
