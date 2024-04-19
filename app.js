@@ -41,15 +41,32 @@ function setupLiveReader(resultElement) {
         BarcodeScanner.init()
         BarcodeScanner.streamCallback = function(result) {
           console.log('barcode detected, stream will stop');
-          let referrer = new URL(document.referrer).origin;
-          const [dashPatId, orderId] = result[0].Value.split(' ');
-          let partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/dash/public` : referrer;
-          window.location.href = `${partToAdd}/redirectToTheOrder/${dashPatId}/${orderId}`;
-          //resultElement.value = result[0].Value;
+          const url = new URL(location.href);
+          const referrer = new URL(document.referrer).origin;
+
+          const redirectTo = url.searchParams.get('redirectTo');
+          // return console.log('redirecting to:', redirectTo);
+          if (redirectTo) {
+            location.href = `${decodeURIComponent(redirectTo)}?code=${result[0].Value}`;
+          } else {
+            const partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/noxo-app/public` : referrer;
+            location.href = `${partToAdd}/productbuys/shoppinglist2?barcode=${result[0].Value}`;
+          }
 
           BarcodeScanner.StopStreamDecode();
           stopBarcodeReader();
         }
+
+        // BarcodeScanner.streamCallback = function(result) {
+        //   console.log('barcode detected, stream will stop');
+        //   let referrer = new URL(document.referrer).origin;
+        //   const [dashPatId, orderId] = result[0].Value.split(' ');
+        //   let partToAdd = !referrer.includes("https://127.0.0.1:8000") ? `${referrer}/dash/public` : referrer;
+        //   location.href = `${partToAdd}/redirectToTheOrder/${dashPatId}/${orderId}`;
+
+        //   BarcodeScanner.StopStreamDecode();
+        //   stopBarcodeReader();
+        // }
 
         video.setAttribute('autoplay', '')
         video.setAttribute('playsinline', '')
